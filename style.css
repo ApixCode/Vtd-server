@@ -5,13 +5,13 @@
     --primary-blue: #007bff; /* A bright, friendly blue */
     --secondary-blue: #e7f3ff; /* A very light blue for accents */
     --accent-green: #28a745; /* A complementary green */
-    --accent-green-light: #e9f7eb; /* NEW: A light green for the background animation */
+    --accent-green-light: #e9f7eb;
     --text-color: #333333; /* Dark grey for text */
     --heading-color: #1e3a5f; /* A deeper blue for headings */
-    --shadow: 0 4px 15px rgba(0, 0, 0, 0.08); /* Soft shadow for depth */
+    --shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
 }
 
-/* NEW: Keyframes for the body background animation */
+/* Keyframes for the body background animation */
 @keyframes animate-bg {
     0%   { background-color: var(--bg-color); }
     33%  { background-color: var(--secondary-blue); }
@@ -19,11 +19,17 @@
     100% { background-color: var(--bg-color); }
 }
 
-/* NEW: Keyframes for the button gradient animation */
+/* Keyframes for the button gradient animation */
 @keyframes animate-gradient {
     0%   { background-position: 0% 50%; }
     50%  { background-position: 100% 50%; }
     100% { background-position: 0% 50%; }
+}
+
+/* Keyframes for the snow falling animation */
+@keyframes fall {
+    0% { transform: translateY(-10vh); }
+    100% { transform: translateY(110vh); }
 }
 
 body {
@@ -35,10 +41,30 @@ body {
     flex-direction: column;
     align-items: center;
     padding: 20px;
-    
-    /* NEW: Applying the background animation */
-    background-color: var(--bg-color); /* Fallback color */
+    background-color: var(--bg-color);
     animation: animate-bg 20s linear infinite;
+    overflow-x: hidden; /* Prevent horizontal scrollbar from snowflakes */
+}
+
+/* --- Snow Effect Styles --- */
+#snow-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none; /* Allows clicks to go through to content below */
+    z-index: 999; /* Position it on top of the background, but below content */
+}
+
+.snowflake {
+    position: absolute;
+    top: -10vh; /* Start above the screen */
+    background: white;
+    border-radius: 50%;
+    animation-name: fall;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
 }
 
 /* --- Main Container --- */
@@ -46,183 +72,50 @@ body {
     max-width: 900px;
     width: 100%;
     padding: 20px;
+    position: relative; /* Ensure container content is above snow */
+    z-index: 1;
 }
 
 /* --- Header Section --- */
-.header {
-    text-align: center;
-    margin-bottom: 40px;
-}
-
-.server-logo {
-    width: 150px;
-    height: 150px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 5px solid var(--card-bg);
-    box-shadow: var(--shadow);
-    margin-bottom: 20px;
-}
-
-.header h1 {
-    font-size: 3rem;
-    color: var(--heading-color);
-    margin: 0;
-    font-weight: 700;
-}
-
-.header p {
-    font-size: 1.2rem;
-    color: var(--text-color);
-    margin-top: 5px;
-}
+.header { text-align: center; margin-bottom: 40px; }
+.server-logo { width: 150px; height: 150px; border-radius: 50%; object-fit: cover; border: 5px solid var(--card-bg); box-shadow: var(--shadow); margin-bottom: 20px; }
+.header h1 { font-size: 3rem; color: var(--heading-color); margin: 0; font-weight: 700; }
+.header p { font-size: 1.2rem; color: var(--text-color); margin-top: 5px; }
 
 /* --- Buttons --- */
-.button-group {
-    margin-top: 25px;
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-    flex-wrap: wrap;
-}
-
-.btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    text-decoration: none;
-    font-weight: 700;
-    padding: 14px 28px;
-    border-radius: 50px;
-    font-size: 1.1rem;
-    transition: all 0.3s ease;
-    border: 2px solid transparent;
-}
-
-.btn-icon {
-    width: 24px;
-    height: 24px;
-}
-
-.btn-primary {
-    color: white;
-    box-shadow: 0 4px 10px rgba(0, 123, 255, 0.4);
-    
-    /* NEW: Updated gradient and animation for the button */
-    background: linear-gradient(45deg, var(--primary-blue), var(--accent-green), var(--primary-blue));
-    background-size: 200% 200%; /* Make the background larger to allow movement */
-    animation: animate-gradient 8s ease infinite;
-}
-
-.btn-primary:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 6px 15px rgba(40, 167, 69, 0.5);
-}
-
-.btn-secondary {
-    background-color: transparent;
-    border-color: var(--primary-blue);
-    color: var(--primary-blue);
-}
-
-.btn-secondary:hover {
-    background-color: var(--primary-blue);
-    color: white;
-    transform: translateY(-3px);
-    box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
-}
-
-.btn-secondary .btn-icon {
-    fill: var(--primary-blue);
-    transition: fill 0.3s ease;
-}
-
-.btn-secondary:hover .btn-icon {
-    fill: white;
-}
+.button-group { margin-top: 25px; display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; text-decoration: none; font-weight: 700; padding: 14px 28px; border-radius: 50px; font-size: 1.1rem; transition: all 0.3s ease; border: 2px solid transparent; }
+.btn-icon { width: 24px; height: 24px; }
+.btn-primary { color: white; box-shadow: 0 4px 10px rgba(0, 123, 255, 0.4); background: linear-gradient(45deg, var(--primary-blue), var(--accent-green), var(--primary-blue)); background-size: 200% 200%; animation: animate-gradient 8s ease infinite; }
+.btn-primary:hover { transform: translateY(-3px); box-shadow: 0 6px 15px rgba(40, 167, 69, 0.5); }
+.btn-secondary { background-color: transparent; border-color: var(--primary-blue); color: var(--primary-blue); }
+.btn-secondary:hover { background-color: var(--primary-blue); color: white; transform: translateY(-3px); box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3); }
+.btn-secondary .btn-icon { fill: var(--primary-blue); transition: fill 0.3s ease; }
+.btn-secondary:hover .btn-icon { fill: white; }
 
 /* --- Content Cards --- */
-.card {
-    background-color: var(--card-bg);
-    border-radius: 15px;
-    padding: 30px;
-    margin-bottom: 30px;
-    box-shadow: var(--shadow);
-    border-left: 5px solid var(--primary-blue);
-}
-
-.card h2 {
-    font-size: 2rem;
-    color: var(--heading-color);
-    margin-top: 0;
-    border-bottom: 2px solid var(--secondary-blue);
-    padding-bottom: 10px;
-    margin-bottom: 20px;
-}
+.card { background-color: var(--card-bg); border-radius: 15px; padding: 30px; margin-bottom: 30px; box-shadow: var(--shadow); border-left: 5px solid var(--primary-blue); }
+.card h2 { font-size: 2rem; color: var(--heading-color); margin-top: 0; border-bottom: 2px solid var(--secondary-blue); padding-bottom: 10px; margin-bottom: 20px; }
 
 /* --- Rules Section --- */
 .rules-list { list-style: none; padding: 0; }
 .rules-list li { padding: 12px 0 12px 35px; position: relative; border-bottom: 1px solid #eee; font-size: 1rem; }
 .rules-list li:last-child { border-bottom: none; }
-.rules-list li::before {
-    content: '✓'; position: absolute; left: 0; top: 12px;
-    color: var(--accent-green); font-weight: bold; font-size: 1.2rem;
-    background-color: #e9f7eb; width: 24px; height: 24px;
-    text-align: center; line-height: 24px; border-radius: 50%;
-}
-.warning-message {
-    background-color: #fff3cd; color: #856404; padding: 15px;
-    border-radius: 8px; margin-top: 20px; border-left: 5px solid #ffc107; font-weight: 500;
-}
+.rules-list li::before { content: '✓'; position: absolute; left: 0; top: 12px; color: var(--accent-green); font-weight: bold; font-size: 1.2rem; background-color: #e9f7eb; width: 24px; height: 24px; text-align: center; line-height: 24px; border-radius: 50%; }
+.warning-message { background-color: #fff3cd; color: #856404; padding: 15px; border-radius: 8px; margin-top: 20px; border-left: 5px solid #ffc107; font-weight: 500; }
 
 /* --- Owner Section --- */
 .owner-section { display: flex; align-items: center; justify-content: center; gap: 20px; flex-wrap: wrap; text-align: center; }
-.owner-pfp {
-    width: 100px; height: 100px; border-radius: 50%; object-fit: cover;
-    border: 4px solid var(--accent-green);
-    cursor: pointer;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-.owner-pfp:hover {
-    transform: scale(1.05);
-    box-shadow: 0 0 15px rgba(40, 167, 69, 0.5);
-}
+.owner-pfp { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 4px solid var(--accent-green); cursor: pointer; transition: transform 0.2s ease, box-shadow 0.2s ease; }
+.owner-pfp:hover { transform: scale(1.05); box-shadow: 0 0 15px rgba(40, 167, 69, 0.5); }
 .owner-name { font-size: 1.5rem; font-weight: 700; color: var(--heading-color); }
 
 /* --- Image Modal (Lightbox) Styles --- */
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 1000;
-    padding-top: 100px;
-    left: 0; top: 0; width: 100%; height: 100%;
-    overflow: auto;
-    background-color: rgba(0,0,0,0.85);
-    justify-content: center;
-    align-items: center;
-}
-.modal-content {
-    margin: auto;
-    display: block;
-    max-width: 80%;
-    max-height: 80vh;
-    animation: zoomIn 0.4s ease;
-}
-@keyframes zoomIn {
-    from {transform: scale(0.5); opacity: 0;}
-    to {transform: scale(1); opacity: 1;}
-}
-.close-modal {
-    position: absolute;
-    top: 25px; right: 45px;
-    color: #f1f1f1; font-size: 40px; font-weight: bold;
-    transition: 0.3s;
-    cursor: pointer;
-}
-.close-modal:hover, .close-modal:focus {
-    color: #bbb; text-decoration: none;
-}
+.modal { display: none; position: fixed; z-index: 1000; padding-top: 100px; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.85); justify-content: center; align-items: center; }
+.modal-content { margin: auto; display: block; max-width: 80%; max-height: 80vh; animation: zoomIn 0.4s ease; }
+@keyframes zoomIn { from {transform: scale(0.5); opacity: 0;} to {transform: scale(1); opacity: 1;} }
+.close-modal { position: absolute; top: 25px; right: 45px; color: #f1f1f1; font-size: 40px; font-weight: bold; transition: 0.3s; cursor: pointer; }
+.close-modal:hover, .close-modal:focus { color: #bbb; text-decoration: none; }
 
 /* --- Footer --- */
 footer { text-align: center; margin-top: 40px; color: #888; }
